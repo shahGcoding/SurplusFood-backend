@@ -17,10 +17,14 @@ app.use(cookieParser())
 
 // import routes
 import userRoutes from "./routes/user.routes.js";
+import orderRoutes from "./routes/order.routes.js";
+import foodRouter from "./routes/food.routes.js";
 
 
 // routes declaration
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/foods", foodRouter);
+app.use("/api/v1/orders", orderRoutes);
 
 
 export { app }; // we can also use export default app
