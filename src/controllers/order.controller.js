@@ -25,6 +25,7 @@ const postOrder = asyncHandler(async (req, res) => {
   
   const order = await Order.create({
     foodId,
+    foodTitle: food.title,
     sellerId: food.userId,
     buyerId,
     deliveryMethod: deliveryMethod || "online-delivery",
@@ -45,7 +46,8 @@ const getOrderBySellerId = asyncHandler(async (req, res) => {
 
   const orders = await Order.find({ sellerId })
     .populate("foodId", "title price")
-    .populate("buyerId", "username email");
+    .populate("buyerId", "username email")
+    .populate("sellerId", "username email");
 
   if (!orders || orders.length === 0) {
     throw new ApiError(404, "No orders found for this seller");
@@ -61,6 +63,7 @@ const getOrderByBuyerId = asyncHandler(async (req, res) => {
   const buyerId = req.user._id; // from auth middleware
 
   const orders = await Order.find({ buyerId })
+    .populate("buyerId", "username email")
     .populate("foodId", "title price")
     .populate("sellerId", "username email");
 
@@ -103,6 +106,27 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, order, "Order status updated successfully"));
 });
 
+const updateCommissionStatus = asyncHandler(async(req, res) => {
+
+  const {id} = req.params;
+
+  const order = await Order.findById(id);
+  if (!order) {
+    throw new ApiError(404, "No order found");
+  }
+  
+  if (order.sellerId.toString() !== req.user._id.toString()) {
+    throw new ApiError(403, "You are not authorized to update this order");
+  }
+
+  order.comissionPaid = "true";
+  await order.save();
+
+  return res
+      .status(200)
+      .json(new ApiResponse(200, "Commission mark as paid"));
+})
+
 
 const getAllOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find()
@@ -124,5 +148,6 @@ export {
   getOrderBySellerId,
   getOrderByBuyerId,
   updateOrderStatus,
+  updateCommissionStatus,
   getAllOrders,
 };

@@ -7,6 +7,10 @@ const orderSchema = new mongoose.Schema(
       ref: "Food",
       required: true,
     },
+    foodTitle: {
+      type: mongoose.Schema.Types.String,
+      ref: "Food",
+    },
     sellerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -31,8 +35,9 @@ const orderSchema = new mongoose.Schema(
       default: null,
     },
     comissionPaid: {
-      type: Boolean,
-      default: false,
+      type: String,
+      enum: ["false", "true"],
+      default: "false",
     },
     comission: {
       type: Number,

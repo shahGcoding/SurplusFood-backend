@@ -1,11 +1,7 @@
 import {Router} from "express";
-import { registerUser, loginUser, logoutUser, refreshAccessToken } from "../controllers/user.controller.js";
-//import {upload} from "../middlewares/multer.middleware.js";
+import { registerUser, loginUser, logoutUser, getCurrentUser, updateUserData, refreshAccessToken, getUserById, getAllUsers, getUserRole } from "../controllers/user.controller.js";
 import {verifyJWT} from "../middlewares/auth.middleware.js";
 
-
-console.log("registerUser", registerUser);
-console.log("loginUser", loginUser);
 
 // Create a new router instance
 const router = Router();
@@ -14,10 +10,14 @@ const router = Router();
 router.post("/register", registerUser);
 router.route("/login").post(loginUser);
 
-
-// secure routes
+// secure/protected routes
 router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/refresh-token").post(refreshAccessToken);
+router.route("/getcurrentuser").get(verifyJWT, getCurrentUser);
+router.route("/updateuserdata/:id").put(verifyJWT, updateUserData);
+router.route("/getuserbyid/:id").get(verifyJWT, getUserById);
+router.route("/getuserrole/:id/role").get(verifyJWT, getUserRole);
+router.route("/getallusers").get(verifyJWT, getAllUsers);
 
 
 export default router;

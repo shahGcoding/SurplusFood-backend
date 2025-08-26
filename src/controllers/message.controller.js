@@ -55,7 +55,6 @@ const getMessageForSeller = asyncHandler(async (req, res) => {
     return res
           .status(200)
           .json(new ApiResponse(200, messages, "Messages fetched Successfully"));      
-
 });
 
 const markMessageAsRead = asyncHandler(async(req, res) => {
