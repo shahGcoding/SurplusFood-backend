@@ -1,5 +1,4 @@
 import { Complaint } from "../models/complaint.model.js";
-import { Order } from "../models/order.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -18,7 +17,6 @@ const postComplaint = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Seller and buyer not found");
   }
 
-
   const complaint = await Complaint.create({
     sellerId,
     buyerId,
@@ -31,7 +29,7 @@ const postComplaint = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, complaint, "Complaint post successfully"));
-});
+}); 
 
 const getAllComplaint = asyncHandler(async (req, res) => {
   const complaint = await Complaint.find()

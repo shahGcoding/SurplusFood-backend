@@ -18,7 +18,7 @@ const foodSchema = new mongoose.Schema({
         required: true,
     },
     status: {
-        type: String,
+        type: String,   
         enum: ["active", "inactive"],
         default: "active",
     },

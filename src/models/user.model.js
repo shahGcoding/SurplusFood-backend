@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken"; // it is bearer token
 import bcrypt from "bcrypt";
+import { type } from "os";
 
 const userSchema = new mongoose.Schema(
   {
@@ -15,6 +16,17 @@ const userSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
+     password: { 
+        type: String,
+        required: [true, "Password is required"],
+    },
+     isverified: {
+        type: Boolean,
+        default: false,
+     }, 
+     verificationCode: {
+        type: String,
+     },
     role: {
       type: String,
       enum: ["buyer", "seller"],
@@ -48,10 +60,7 @@ const userSchema = new mongoose.Schema(
         required: function () {return this.role === "seller"},
         trim: true,
     },
-    password: { 
-        type: String,
-        required: [true, "Password is required"],
-    },
+
     refreshToken: { type: String, default: null },
   },
   { timestamps: true }

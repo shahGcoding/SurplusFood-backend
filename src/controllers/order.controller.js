@@ -17,6 +17,10 @@ const postOrder = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Food item not found");
   }
 
+  if (food.quantity < quantity) {
+    throw new ApiError(400, "Not enough quantity available");
+  }
+
   // Calculate price and commission
   const totalPrice = food.price * quantity;
   const comissionRate = 0.1;
@@ -35,6 +39,9 @@ const postOrder = asyncHandler(async (req, res) => {
     comission,
   });
 
+  food.quantity -= quantity;
+  await food.save();
+
   return res
     .status(201)
     .json(new ApiResponse(201, order, "Order created successfully"));
@@ -49,9 +56,9 @@ const getOrderBySellerId = asyncHandler(async (req, res) => {
     .populate("buyerId", "username email")
     .populate("sellerId", "username email");
 
-  if (!orders || orders.length === 0) {
-    throw new ApiError(404, "No orders found for this seller");
-  }
+  // if (!orders || orders.length === 0) {
+  //   throw new ApiError(404, "No orders found for this seller");
+  // }
 
   return res
     .status(200)
