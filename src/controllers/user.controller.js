@@ -163,10 +163,73 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ success: false, message: "Email is required" });
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ success: false, message: "User not found" });
+  }
+
+  // Generate reset token (JWT valid for 15 min)
+  const resetToken = jwt.sign(
+    { id: user._id },
+    process.env.JWT_SECRET,
+    { expiresIn: "15m" }
+  );
+
+  const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+
+  const message = `
+    <h2>Password Reset</h2>
+    <p>Click below to reset your password:</p>
+    <a href="${resetUrl}" target="_blank">Reset Password</a>
+    <p>Link expires in 15 minutes.</p>
+  `;
+
+  await sendVerificationCode(user.email, message); 
+
+  return res.status(200).json({
+    success: true,
+    message: "Password reset link sent to your email",
+  });
+});
+
+const resetPassword = asyncHandler(async (req, res) => {
+
+  const {token} = req.params;
+  const {password} = req.body;
+
+  if(!token || !password) {
+    throw new ApiError(400, "Token and password are required");
+  }
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+  const user = await User.findById(decoded.id);
+  if (!user) {
+      throw new ApiError(404, "User not found");
+  }
+
+  user.password = password;
+  user.save();
+
+  return res
+      .status(200)
+      .json(new ApiResponse(200, null, "Password reset successful"));
+
+})
+
+
 
 const logoutUser = asyncHandler(async (req, res) => {
-  // Check if req.user exists
+  
   if (!req.user || !req.user._id) {
+
     // Even if user doesn’t exist, clear cookies
     const options = { httpOnly: true, secure: true };
 
@@ -177,7 +240,6 @@ const logoutUser = asyncHandler(async (req, res) => {
       .json(new ApiResponse(200, null, "User already deleted, cleared session"));
   }
 
-  // If user exists, update refresh token
   await User.findByIdAndUpdate(
     req.user._id,
     { $set: { refreshToken: null } },
@@ -330,6 +392,8 @@ const getAllUsers = asyncHandler(async (req, res) => {
 export {
   registerUser,
   verifyEmail,
+  forgotPassword,
+  resetPassword,
   loginUser,
   logoutUser,
   refreshAccessToken,

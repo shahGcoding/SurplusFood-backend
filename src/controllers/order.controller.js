@@ -6,7 +6,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 
 const postOrder = asyncHandler(async (req, res) => {
-  const { foodId, buyerId, quantity, paymentMethod, deliveryMethod } = req.body;
+  const { foodId, buyerId, quantity, paymentMethod, deliveryMethod, deliveryCharge = 0 } = req.body;
 
   if (!foodId || !buyerId || !quantity || !paymentMethod) {
     throw new ApiError(400, "All fields are required");
@@ -21,8 +21,11 @@ const postOrder = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Not enough quantity available");
   }
 
-  // Calculate price and commission
-  const totalPrice = food.price * quantity;
+  const basePrice = food.price * quantity;
+
+  // Add delivery charge if selected
+  const totalPrice = deliveryMethod === "online-delivery" ? basePrice + deliveryCharge : basePrice;
+
   const comissionRate = 0.1;
   const comission = totalPrice * comissionRate;
 
@@ -33,6 +36,7 @@ const postOrder = asyncHandler(async (req, res) => {
     sellerId: food.userId,
     buyerId,
     deliveryMethod: deliveryMethod || "online-delivery",
+    deliveryCharge,
     quantity,
     totalPrice,
     paymentMethod: paymentMethod || "cash on delivery",

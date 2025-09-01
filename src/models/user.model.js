@@ -25,7 +25,10 @@ const userSchema = new mongoose.Schema(
         default: false,
      }, 
      verificationCode: {
-        type: String,
+        type: String
+     },
+     expiryOfCode:{
+      type: Date
      },
     role: {
       type: String,

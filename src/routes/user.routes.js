@@ -1,5 +1,5 @@
 import {Router} from "express";
-import { registerUser, verifyEmail, loginUser, logoutUser, getCurrentUser, updateUserData, refreshAccessToken, getUserById, getAllUsers, getUserRole } from "../controllers/user.controller.js";
+import { registerUser, verifyEmail, loginUser, logoutUser, getCurrentUser, updateUserData, refreshAccessToken, getUserById, getAllUsers, getUserRole, forgotPassword, resetPassword } from "../controllers/user.controller.js";
 import {verifyJWT} from "../middlewares/auth.middleware.js";
 
 
@@ -10,6 +10,8 @@ const router = Router();
 router.post("/register", registerUser);
 router.post('/verifyemail', verifyEmail);
 router.route("/login").post(loginUser);
+router.post("/forgotpassword", forgotPassword);
+router.post("/resetpassword/:token", resetPassword);
 
 // secure/protected routes
 router.route("/logout").post(logoutUser);
