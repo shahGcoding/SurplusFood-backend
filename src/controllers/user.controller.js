@@ -68,6 +68,7 @@ const registerUser = asyncHandler(async (req, res) => {
     phone: role === "seller" ? phone : undefined,
     latitude,
     longitude,
+    expiryOfCode: new Date(Date.now() + 5 * 60 * 1000),
   });
 
    sendVerificationCode(user.email, verificationCode);
@@ -82,13 +83,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   return res
     .status(201)
-    .json(new ApiResponse(201, {
-      _id: createdUser._id,
-      email: createdUser.email,
-      username: createdUser.username,
-      role: createdUser.role,
-      isverified: createdUser.isverified,   // IMPORTANT
-    }, "User registered successfully"));
+    .json(new ApiResponse(201, createdUser, "User registered successfully"));
 });
 
 const verifyEmail = asyncHandler(async (req, res) => {
@@ -105,6 +100,7 @@ const verifyEmail = asyncHandler(async (req, res) => {
 
   user.isverified = true;
   user.verificationCode = undefined;
+  user.expiryOfCode = undefined;
   
   await user.save();
   await WelcomeEmail(user.email, user.username);

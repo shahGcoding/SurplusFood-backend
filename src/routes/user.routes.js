@@ -6,7 +6,6 @@ import {verifyJWT} from "../middlewares/auth.middleware.js";
 // Create a new router instance
 const router = Router();
 
-//router.route("/register").post(registerUser); // or 
 router.post("/register", registerUser);
 router.post('/verifyemail', verifyEmail);
 router.route("/login").post(loginUser);

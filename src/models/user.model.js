@@ -16,20 +16,21 @@ const userSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
-     password: { 
-        type: String,
-        required: [true, "Password is required"],
+    password: {
+      type: String,
+      required: [true, "Password is required"],
     },
-     isverified: {
-        type: Boolean,
-        default: false,
-     }, 
-     verificationCode: {
-        type: String
-     },
-     expiryOfCode:{
-      type: Date
-     },
+    isverified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationCode: {
+      type: String,
+    },
+    expiryOfCode: {
+      type: Date,
+      index: { expires: 0 },
+    },
     role: {
       type: String,
       enum: ["buyer", "seller"],
@@ -40,28 +41,32 @@ const userSchema = new mongoose.Schema(
       enum: ["active", "inactive", "pending", "approved", "rejected"],
       default: "active",
     },
-    longitude: { 
+    longitude: {
       type: Number,
-      default: null
-     },
-    latitude: { 
-      type: Number, 
-      default: null
+      default: null,
+    },
+    latitude: {
+      type: Number,
+      default: null,
     },
     businessName: {
       type: String,
-      required: function () {return this.role === "seller"},
-
+      required: function () {
+        return this.role === "seller";
+      },
     },
     businessAddress: {
-        type: String,
-        required: function () {return this.role === "seller"},
-        
+      type: String,
+      required: function () {
+        return this.role === "seller";
+      },
     },
     phone: {
-        type: Number,
-        required: function () {return this.role === "seller"},
-        trim: true,
+      type: Number,
+      required: function () {
+        return this.role === "seller";
+      },
+      trim: true,
     },
 
     refreshToken: { type: String, default: null },
@@ -87,7 +92,7 @@ userSchema.methods.generateAccessToken = function () {
     {
       _id: this._id,
       email: this.email,
-      name: this.name,  
+      name: this.name,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
