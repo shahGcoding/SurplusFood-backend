@@ -3,7 +3,7 @@ import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken"; 
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -41,9 +41,9 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required");
   }
 
-  if (!["buyer", "seller"].includes(role)) {
-    throw new ApiError(400, "Invalid role. Must be 'buyer' or 'seller'");
-  }
+  // if (!["buyer", "seller"].includes(role)) {
+  //   throw new ApiError(400, "Invalid role. Must be 'buyer' or 'seller'");
+  // }
 
   if (role === "seller" && (!businessAddress || !businessName || !phone)) {
     throw new ApiError(400, "Business details are required for sellers");
@@ -54,7 +54,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "User already exists with this email");
   }
 
-  const verificationCode = Math.floor(100000 + Math.random() * 900000).toString()
+  const verificationCode = Math.floor(100000 + Math.random() * 900000).toString() // 6-digit code
 
   const user = await User.create({
     email,

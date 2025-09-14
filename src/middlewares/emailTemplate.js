@@ -13,7 +13,7 @@ export const Verification_Email_Template = `
               background-color: #f4f4f4;
           }
           .container {
-              max-width: 600px;
+              max-width: 600px; 
               margin: 30px auto;
               background: #ffffff;
               border-radius: 8px;

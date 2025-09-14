@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken"; // it is bearer token
 import bcrypt from "bcrypt";
-import { type } from "os";
 
 const userSchema = new mongoose.Schema(
   {
