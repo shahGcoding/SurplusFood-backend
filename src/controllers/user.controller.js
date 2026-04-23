@@ -41,10 +41,6 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required");
   }
 
-  // if (!["buyer", "seller"].includes(role)) {
-  //   throw new ApiError(400, "Invalid role. Must be 'buyer' or 'seller'");
-  // }
-
   if (role === "seller" && (!businessAddress || !businessName || !phone)) {
     throw new ApiError(400, "Business details are required for sellers");
   }
@@ -212,14 +208,13 @@ const resetPassword = asyncHandler(async (req, res) => {
   }
 
   user.password = password;
-  user.save();
+  user.save();  
 
   return res
       .status(200)
       .json(new ApiResponse(200, null, "Password reset successful"));
 
 })
-
 
 
 const logoutUser = asyncHandler(async (req, res) => {

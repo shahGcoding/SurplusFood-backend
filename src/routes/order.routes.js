@@ -14,7 +14,7 @@ router.get("/getorderbybuyerid/:buyerId", verifyJWT, getOrderByBuyerId);
 router.put("/updateorderstatus/:id", verifyJWT, updateOrderStatus);
 router.put("/updatecommisionstatus/:id", verifyJWT, updateCommissionStatus);
 router.route("/getallorders").get(verifyJWT, getAllOrders);
-
+ 
 
 
 
