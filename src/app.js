@@ -7,6 +7,7 @@ import paymentCheckoutRouter from "./routes/paymentCheckout.route.js";
 
 const app = express();
  
+
 //app.use(cors({origin: "http://localhost:5173", credentials: true,}));
 // app.use(cors({origin: process.env.CLIENT_URL, credentials: true,}));
 app.use(cors({
@@ -14,6 +15,7 @@ app.use(cors({
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
 }));
+
 
 app.use("/api/v1/webhook", paymentWebhookRouter);
 
