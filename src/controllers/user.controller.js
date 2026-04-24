@@ -145,6 +145,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const cookieOptions = {
     httpOnly: true,
     secure: true,
+    sameSite: "None",
   };
 
   return res
@@ -222,7 +223,7 @@ const logoutUser = asyncHandler(async (req, res) => {
   if (!req.user || !req.user._id) {
 
     // Even if user doesn’t exist, clear cookies
-    const options = { httpOnly: true, secure: true };
+    const options = { httpOnly: true, secure: true, sameSite: "None" };
 
     return res
       .cookie("accessToken", "", options)
@@ -274,6 +275,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     const options = {
       httpOnly: true,
       secure: true, // Use secure cookies in production
+      sameSite: "None", 
     };
 
     const { accessToken, refreshToken: newRefreshToken } =
